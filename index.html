@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Once — Agenda de Shows</title>
+  <link rel="icon" type="image/png" href="assets/Logo%20sin%20fondo.png" />
+  <link rel="apple-touch-icon" href="assets/Logo%20sin%20fondo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:    #070010;
+      --bg-mid:     #110022;
+      --purple-glow:#5c0fa0;
+      --gold:       #d4a017;
+      --gold-light: #f2c94c;
+      --gold-dim:   rgba(212,160,23,.18);
+      --white:      #ffffff;
+      --lavender:   #dcc8f5;
+      --muted:      #9b7ec8;
+      --radius:     10px;
+      --topbar-h:   90px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-deep);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════════
+       TOP BAR  (más alto para logo grande)
+    ═══════════════════════════════════════════ */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: var(--topbar-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      background: rgba(7,0,16,.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212,160,23,.22);
+    }
+
+    .topbar__logo {
+      height: 72px;          /* logo más grande */
+      object-fit: contain;
+      filter: drop-shadow(0 0 14px rgba(212,160,23,.5));
+    }
+
+    .topbar__contact {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .topbar__contact:hover .topbar__num { color: var(--gold-light); }
+
+    .topbar__icon {
+      width: 42px; height: 42px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .topbar__icon svg { width: 18px; height: 18px; fill: var(--gold); }
+
+    .topbar__label {
+      font-family: 'Oswald', sans-serif;
+      font-size: .65rem;
+      letter-spacing: .2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .topbar__num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      line-height: 1;
+      transition: color .2s;
+    }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    .hero {
+      min-height: 100svh;
+      padding-top: var(--topbar-h);
+      position: relative;
+      display: grid;
+      grid-template-columns: 320px 1fr 260px;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero__bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 70% at 50% 28%, #3d0068 0%, transparent 60%),
+        radial-gradient(ellipse 70% 55% at 50% 80%, #22004a 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 10% 50%, #1a0040 0%, transparent 55%),
+        radial-gradient(ellipse 40% 30% at 90% 50%, #1a0040 0%, transparent 55%),
+        var(--bg-deep);
+    }
+    .hero__bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* Ghost "LA ONCE" — ahora DETRÁS de la banda (zona alta) */
+    .hero__ghost-title {
+      position: absolute;
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(7rem, 20vw, 16rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      white-space: nowrap;
+      background: linear-gradient(180deg,
+        rgba(220,200,255,.18) 0%,
+        rgba(180,120,255,.10) 45%,
+        rgba(120,50,200,.03) 80%,
+        transparent 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    /* ── Columna izquierda: YouTube + fechas ── */
+    .hero__left {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding: clamp(16px, 2.5vh, 36px) 32px clamp(16px, 2.5vh, 36px) 28px;
+      align-items: flex-end;
+      will-change: opacity, transform;
+      opacity: 0;
+    }
+
+    /* ── YouTube player ── */
+    .yt-block {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+      text-align: left;
+    }
+
+    .yt-block__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .yt-block__label {
+      font-family: 'Oswald', sans-serif;
+      font-size: .62rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .yt-block__label::before {
+      content: '';
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #f00;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    .yt-block__link {
+      font-family: 'Oswald', sans-serif;
+      font-size: .58rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .yt-block__link:hover { color: var(--gold-light); }
+
+    .yt-block__frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(212,160,23,.2);
+      box-shadow: 0 8px 32px rgba(0,0,0,.6);
+    }
+
+    .yt-block__frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Fallback cuando el embed no carga */
+    .yt-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(30,0,60,.9);
+      text-align: center;
+      padding: 12px;
+    }
+    .yt-fallback svg { width: 36px; height: 36px; fill: #f00; opacity: .9; }
+    .yt-fallback span {
+      font-family: 'Oswald', sans-serif;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--lavender);
+    }
+    .yt-fallback a {
+      color: var(--gold-light);
+      text-decoration: none;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    /* ── Fechas en columna izquierda ── */
+    .hero__dates-group {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      align-items: flex-end;
+      width: 100%;
+    }
+
+    .hd-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      position: relative;
+      text-align: right;
+      padding-right: 18px;
+    }
+    .hd-item::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 5px; bottom: 5px;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, var(--gold) 40%, var(--gold) 60%, transparent);
+      border-radius: 2px;
+    }
+
+    .hd-item__date {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(.7rem, 1.2vw, .92rem);
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--white);
+      line-height: 1.15;
+    }
+    .hd-item__type {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(.82rem, 1.4vw, 1.08rem);
+      font-weight: 400;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      line-height: 1.1;
+    }
+    .hd-item__place {
+      font-size: clamp(.58rem, 1vw, .72rem);
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Columna derecha: fechas ── */
+    .hero__right {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      padding: clamp(16px, 2.5vh, 36px) 28px clamp(16px, 2.5vh, 36px) 24px;
+      align-items: flex-start;
+      will-change: opacity, transform;
+      opacity: 0;
+    }
+
+    .hd-item--right {
+      text-align: left;
+      padding-right: 0;
+      padding-left: 18px;
+    }
+    .hd-item--right::after { display: none; }
+    .hd-item--right::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 5px; bottom: 5px;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, var(--gold) 40%, var(--gold) 60%, transparent);
+      border-radius: 2px;
+    }
+
+    /* ── Centro ── */
+    .hero__center {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: calc(100svh - var(--topbar-h));
+    }
+
+    /* BANDA: arriba, ocupa lo que necesita (sin flex:1 que crea vacío) */
+    .hero__band-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .hero__band-glow {
+      position: absolute;
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: clamp(300px, 62vw, 720px);
+      height: clamp(300px, 62vw, 720px);
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        rgba(80,10,140,.45) 0%,
+        rgba(40,0,90,.15) 50%,
+        transparent 72%
+      );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hero__band-img {
+      width: clamp(280px, 46vw, 560px);
+      object-fit: contain;
+      position: relative;
+      z-index: 3;
+      margin-top: 0;
+      /* fondo ya es transparente — sin máscara */
+      filter: drop-shadow(0 10px 40px rgba(20,0,60,.7));
+      opacity: 0;
+      transform: translateY(-16px);
+      animation: fadeDown 1s .6s ease forwards;
+    }
+
+    /* Tagline + badge + scroll hint juntos */
+    .hero__bottom {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+      padding-bottom: 20px;
+      margin-top: -16px;
+    }
+
+    .hero__tagline {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: var(--gold-light);
+      letter-spacing: .03em;
+      opacity: 0;
+      animation: fadeUp .8s .4s ease forwards;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 6px 24px;
+      border: 1.5px solid var(--gold);
+      color: var(--gold-light);
+      font-family: 'Oswald', sans-serif;
+      font-size: .8rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp .8s .9s ease forwards;
+    }
+    .hero__badge::before, .hero__badge::after {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* Scroll hint — fluye justo debajo del badge */
+    .hero__scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+      opacity: 0;
+      animation: fadeUp .8s 1.5s ease forwards;
+    }
+    .hero__scroll-hint span {
+      font-size: .55rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .scroll-mouse {
+      width: 19px; height: 30px;
+      border: 1.5px solid var(--muted);
+      border-radius: 9px;
+      position: relative;
+    }
+    .scroll-mouse::after {
+      content: '';
+      position: absolute;
+      top: 5px; left: 50%;
+      transform: translateX(-50%);
+      width: 3px; height: 3px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: scrollDot 1.6s infinite;
+    }
+
+    /* ═══════════════════════════════════════════
+       GALLERY STRIP
+    ═══════════════════════════════════════════ */
+    .gallery-strip {
+      padding: 64px 0 52px;
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-deep) 100%);
+    }
+    .gallery-strip__label {
+      text-align: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: .66rem;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 26px;
+    }
+    .gallery-wrapper { position: relative; }
+    .gallery-wrapper::before,
+    .gallery-wrapper::after {
+      content: '';
+      position: absolute; top: 0; bottom: 0;
+      width: 120px; z-index: 2; pointer-events: none;
+    }
+    .gallery-wrapper::before { left: 0;  background: linear-gradient(to right, var(--bg-deep), transparent); }
+    .gallery-wrapper::after  { right: 0; background: linear-gradient(to left,  var(--bg-deep), transparent); }
+
+    .gallery-track {
+      display: flex;
+      gap: 14px;
+      width: max-content;
+      animation: scrollLeft 42s linear infinite;
+    }
+    .gallery-track:hover { animation-play-state: paused; }
+    .gallery-track img {
+      height: 300px;
+      width: auto;
+      object-fit: cover;
+      border-radius: var(--radius);
+      flex-shrink: 0;
+      filter: brightness(.82) saturate(1.1);
+      border: 1px solid rgba(212,160,23,.12);
+      transition: transform .35s ease, filter .35s ease;
+    }
+    .gallery-track img:hover { transform: scale(1.045); filter: brightness(1) saturate(1.3); }
+
+    /* ═══════════════════════════════════════════
+       AGENDA SECTION
+    ═══════════════════════════════════════════ */
+    .agenda {
+      padding: 96px 24px 110px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      font-family: 'Oswald', sans-serif;
+      font-size: .66rem;
+      letter-spacing: .36em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .eyebrow::before { background: linear-gradient(to right, transparent, var(--gold-dim)); }
+    .eyebrow::after  { background: linear-gradient(to left,  transparent, var(--gold-dim)); }
+    .eyebrow::before, .eyebrow::after { content: ''; flex: 1; height: 1px; }
+
+    .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(3.2rem, 10vw, 6.5rem);
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, #dcc8f5 60%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 64px;
+    }
+
+    .dates-list { display: flex; flex-direction: column; }
+    .date-row {
+      display: grid;
+      grid-template-columns: minmax(100px, 180px) 1fr auto;
+      align-items: center;
+      gap: 0 20px;
+      padding: 24px 28px;
+      border-bottom: 1px solid rgba(212,160,23,.1);
+      position: relative;
+      cursor: default;
+      transition: background .22s;
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+    .date-row:first-child { border-top: 1px solid rgba(212,160,23,.1); }
+    .date-row.visible { animation: slideIn .48s ease forwards; }
+    .date-row:hover { background: rgba(92,15,160,.16); }
+
+    .date-row__day { display: flex; align-items: baseline; gap: 10px; }
+    .date-row__num {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--white);
+      transition: color .2s;
+      white-space: nowrap;
+    }
+    .date-row:hover .date-row__num { color: var(--gold-light); }
+    .date-row__month {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(.7rem, 1.6vw, .9rem);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .date-row__info {
+      display: flex; flex-direction: column; gap: 3px;
+      padding-left: 24px;
+      border-left: 1px solid rgba(212,160,23,.18);
+    }
+    .date-row__event {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(.9rem, 2vw, 1.2rem);
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      line-height: 1.15;
+    }
+    .date-row__place {
+      font-size: clamp(.65rem, 1.3vw, .78rem);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .date-row__dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transition: opacity .2s;
+      flex-shrink: 0;
+    }
+    .date-row:hover .date-row__dot { opacity: 1; }
+
+    /* ═══════════════════════════════════════════
+       CTA BANNER
+    ═══════════════════════════════════════════ */
+    .cta-banner {
+      padding: 72px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #180038 0%, #360062 50%, #180038 100%);
+      border-top: 1px solid rgba(212,160,23,.22);
+      border-bottom: 1px solid rgba(212,160,23,.22);
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(212,160,23,.07) 0%, transparent 70%);
+    }
+    .cta-banner__label {
+      font-family: 'Oswald', sans-serif;
+      font-size: .66rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .cta-banner__title {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(2rem, 5.5vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .cta-banner__sub {
+      font-size: .88rem;
+      color: var(--lavender);
+      letter-spacing: .06em;
+      margin-bottom: 36px;
+    }
+    .cta-banner__phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      padding: 15px 42px;
+      border: 2px solid var(--gold);
+      color: var(--gold-light);
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1.5rem, 4.5vw, 2.3rem);
+      letter-spacing: .12em;
+      transition: background .25s, color .25s;
+      position: relative; z-index: 1;
+    }
+    .cta-banner__phone svg { width: 22px; height: 22px; fill: var(--gold-light); transition: fill .25s; }
+    .cta-banner__phone:hover { background: var(--gold); color: var(--bg-deep); }
+    .cta-banner__phone:hover svg { fill: var(--bg-deep); }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      background: var(--bg-deep);
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+    footer img { height: 46px; object-fit: contain; margin-bottom: 14px; opacity: .65; }
+    footer p {
+      font-size: .7rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════════════════════
+       KEYFRAMES
+    ═══════════════════════════════════════════ */
+    @keyframes scrollLeft {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popIn {
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes scrollDot {
+      0%   { top: 5px;  opacity: 1; }
+      80%  { top: 17px; opacity: 0; }
+      100% { top: 5px;  opacity: 0; }
+    }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(.8); }
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 280px 1fr 220px; }
+    }
+
+    @media (max-width: 820px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero__left, .hero__right { display: none; }
+      .hero__center {
+        justify-content: center;
+        gap: 12px;
+        padding: 16px 16px 72px;
+        min-height: calc(100svh - var(--topbar-h));
+      }
+      .hero__bottom {
+        margin-top: 0;
+        padding-bottom: 0;
+      }
+      .hero__band-img {
+        width: min(88vw, 420px);
+      }
+      .hero__ghost-title {
+        top: 8%;
+        font-size: clamp(4.5rem, 28vw, 9rem);
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root { --topbar-h: 68px; }
+      .topbar { padding: 0 16px; }
+      .topbar__logo { height: 52px; }
+      .topbar__num { font-size: .95rem; }
+      .topbar__label { font-size: .58rem; }
+
+      .date-row {
+        grid-template-columns: minmax(80px, 130px) 1fr;
+        padding: 18px 16px;
+      }
+      .date-row__dot { display: none; }
+      .date-row__info { padding-left: 16px; }
+      .gallery-track img { height: 220px; }
+      .agenda { padding: 64px 14px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ TOP BAR ══════════════════════════════════════ -->
+  <header class="topbar">
+    <img class="topbar__logo" src="assets/Logo%20sin%20fondo.png" alt="La Once" />
+    <a class="topbar__contact" href="tel:098256836">
+      <div class="topbar__icon">
+        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+      </div>
+      <div>
+        <div class="topbar__label">Contrataciones</div>
+        <div class="topbar__num">098 256 836</div>
+      </div>
+    </a>
+  </header>
+
+  <!-- ═══ HERO ══════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__ghost-title" aria-hidden="true">LA ONCE</div>
+
+    <!-- ── Columna izquierda: player + fechas ── -->
+    <aside class="hero__left" id="heroLeft">
+
+      <!-- YouTube player -->
+      <!--
+        PARA ACTIVAR EL AUTOPLAY DEL CANAL:
+        1. Ir a youtube.com/@LAO11CE en Chrome
+        2. Click derecho → "Ver código fuente de la página"
+        3. Buscar "channelId" o "externalId" → copiá el valor (UCxxxxxxxx)
+        4. Reemplazá "LAO11CE" en el src del iframe de abajo por ese ID
+      -->
+      <div class="yt-block">
+        <div class="yt-block__header">
+          <span class="yt-block__label">Videos</span>
+          <a class="yt-block__link" href="https://www.youtube.com/@LAO11CE" target="_blank" rel="noopener">
+            Ver canal →
+          </a>
+        </div>
+        <div class="yt-block__frame" id="ytFrame">
+          <!-- El player se inyecta aquí por JS -->
+          <div id="yt-inner"></div>
+          <div class="yt-fallback" id="ytFallback" style="display:none;">
+            <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+            <span>La Once en YouTube</span>
+            <a href="https://www.youtube.com/@LAO11CE" target="_blank" rel="noopener">Abrir canal ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fechas -->
+      <div class="hero__dates-group">
+        <div class="hd-item">
+          <span class="hd-item__date">20 Junio</span>
+          <span class="hd-item__type">Baile</span>
+          <span class="hd-item__place">Goñi</span>
+        </div>
+        <div class="hd-item">
+          <span class="hd-item__date">07 Septiembre</span>
+          <span class="hd-item__type">Raid</span>
+          <span class="hd-item__place">Capilla del Sauce</span>
+        </div>
+        <div class="hd-item">
+          <span class="hd-item__date">03 Octubre</span>
+          <span class="hd-item__type">Raid</span>
+          <span class="hd-item__place">Batlle y Ordóñez</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── Centro: banda arriba, logo abajo ── -->
+    <div class="hero__center">
+      <div class="hero__band-wrap">
+        <div class="hero__band-glow"></div>
+        <img class="hero__band-img" src="assets/BandaSINFONDO.png" alt="La Once banda" />
+      </div>
+      <div class="hero__bottom">
+        <p class="hero__tagline">¡¡¡Esta Sonando!!!</p>
+        <div class="hero__badge">En Vivo</div>
+        <div class="hero__scroll-hint">
+          <div class="scroll-mouse"></div>
+          <span>Ver agenda</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Columna derecha: fechas ── -->
+    <aside class="hero__right" id="heroRight">
+      <div class="hd-item hd-item--right">
+        <span class="hd-item__date">11 Julio</span>
+        <span class="hd-item__type">Baile</span>
+        <span class="hd-item__place">Sarandí del Yi</span>
+      </div>
+      <div class="hd-item hd-item--right">
+        <span class="hd-item__date">12 Septiembre</span>
+        <span class="hd-item__type">Fiesta Privada</span>
+      </div>
+    </aside>
+
+  </section>
+
+  <!-- ═══ GALLERY STRIP ════════════════════════════════ -->
+  <section class="gallery-strip">
+    <p class="gallery-strip__label">La banda en acción</p>
+    <div class="gallery-wrapper">
+      <div class="gallery-track" id="galleryTrack">
+        <img src="assets/IMG_4342.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7644.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4233.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7651.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7768.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4253.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4322.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4347.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7690.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7705.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4342.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7644.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4233.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7651.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7768.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4253.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4322.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_4347.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7690.JPG.jpeg" alt="La Once en vivo" />
+        <img src="assets/IMG_7705.JPG.jpeg" alt="La Once en vivo" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ AGENDA ════════════════════════════════════════ -->
+  <section class="agenda" id="agenda">
+    <p class="eyebrow">Próximas fechas</p>
+    <h2 class="section-title">Agenda 2026</h2>
+    <div class="dates-list">
+      <div class="date-row">
+        <div class="date-row__day"><span class="date-row__num">20</span><span class="date-row__month">Junio</span></div>
+        <div class="date-row__info"><span class="date-row__event">Baile</span><span class="date-row__place">Goñi</span></div>
+        <span class="date-row__dot"></span>
+      </div>
+      <div class="date-row">
+        <div class="date-row__day"><span class="date-row__num">11</span><span class="date-row__month">Julio</span></div>
+        <div class="date-row__info"><span class="date-row__event">Baile</span><span class="date-row__place">Sarandí del Yi</span></div>
+        <span class="date-row__dot"></span>
+      </div>
+      <div class="date-row">
+        <div class="date-row__day"><span class="date-row__num">07</span><span class="date-row__month">Septiembre</span></div>
+        <div class="date-row__info"><span class="date-row__event">Raid</span><span class="date-row__place">Capilla del Sauce</span></div>
+        <span class="date-row__dot"></span>
+      </div>
+      <div class="date-row">
+        <div class="date-row__day"><span class="date-row__num">12</span><span class="date-row__month">Septiembre</span></div>
+        <div class="date-row__info"><span class="date-row__event">Fiesta Privada</span><span class="date-row__place">&mdash;</span></div>
+        <span class="date-row__dot"></span>
+      </div>
+      <div class="date-row">
+        <div class="date-row__day"><span class="date-row__num">03</span><span class="date-row__month">Octubre</span></div>
+        <div class="date-row__info"><span class="date-row__event">Raid</span><span class="date-row__place">Batlle y Ordóñez</span></div>
+        <span class="date-row__dot"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA BANNER ═══════════════════════════════════ -->
+  <section class="cta-banner">
+    <p class="cta-banner__label">Reservá tu fecha</p>
+    <h2 class="cta-banner__title">Contrataciones</h2>
+    <p class="cta-banner__sub">Bailes &bull; Fiestas privadas &bull; Raids &bull; Eventos</p>
+    <a class="cta-banner__phone" href="tel:098256836">
+      <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+      098 256 836
+    </a>
+  </section>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════ -->
+  <footer>
+    <img src="assets/Logo%20sin%20fondo.png" alt="La Once" />
+    <p>&copy; 2026 LUCAS ASTOR &mdash; Todos los derechos reservados a LA ONCE</p>
+  </footer>
+
+  <script>
+    /* ══════════════════════════════════════════════
+       1. COLUMNAS LATERALES — reveal + fade scroll
+    ══════════════════════════════════════════════ */
+    const heroEl    = document.getElementById('hero');
+    const heroLeft  = document.getElementById('heroLeft');
+    const heroRight = document.getElementById('heroRight');
+
+    setTimeout(() => {
+      heroLeft.style.transition  = 'opacity .7s ease, transform .7s ease';
+      heroRight.style.transition = 'opacity .7s ease, transform .7s ease';
+      heroLeft.style.opacity  = '1';
+      heroRight.style.opacity = '1';
+      setTimeout(() => {
+        heroLeft.style.transition  = '';
+        heroRight.style.transition = '';
+      }, 800);
+    }, 600);
+
+    function updateSides() {
+      const p     = Math.min(window.scrollY / (heroEl.offsetHeight * 0.45), 1);
+      const ease  = p * p;
+      const op    = Math.max(0, 1 - ease * 2.4);
+      const tx    = ease * 100;
+      heroLeft.style.opacity    = op;
+      heroLeft.style.transform  = `translateX(${-tx}px)`;
+      heroRight.style.opacity   = op;
+      heroRight.style.transform = `translateX(${tx}px)`;
+    }
+    window.addEventListener('scroll', updateSides, { passive: true });
+
+    /* ══════════════════════════════════════════════
+       2. YOUTUBE PLAYER — channel ID via CORS proxy
+    ══════════════════════════════════════════════ */
+    const YT_HANDLE   = 'LAO11CE';
+    const YT_CHANNEL  = `https://www.youtube.com/@${YT_HANDLE}`;
+    const YT_LS_KEY   = 'laonce_yt_cid';
+    const ytFallback  = document.getElementById('ytFallback');
+    let   ytPlayer;
+
+    function showYtFallback() {
+      document.getElementById('yt-inner').style.display = 'none';
+      ytFallback.style.display = 'flex';
+    }
+
+    function mountPlayer(channelId) {
+      // Uploads playlist = "UU" + channel ID without "UC" prefix
+      const uploadsId = 'UU' + channelId.slice(2);
+
+      // Inject YouTube IFrame API script once
+      if (!window.YT) {
+        const s = document.createElement('script');
+        s.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(s);
+      }
+
+      window.onYouTubeIframeAPIReady = function () {
+        ytPlayer = new YT.Player('yt-inner', {
+          playerVars: {
+            list:            uploadsId,
+            listType:        'playlist',
+            autoplay:        1,
+            mute:            1,
+            controls:        1,
+            rel:             0,
+            modestbranding:  1,
+            playsinline:     1,
+            iv_load_policy:  3,
+          },
+          events: {
+            onReady: e => { e.target.mute(); e.target.playVideo(); },
+            onError: showYtFallback,
+          },
+        });
+      };
+
+      // If YT API was already loaded, fire manually
+      if (window.YT && window.YT.Player) {
+        window.onYouTubeIframeAPIReady();
+      }
+    }
+
+    async function initYouTube() {
+      // Check localStorage for cached channel ID
+      const cached = localStorage.getItem(YT_LS_KEY);
+      if (cached) { mountPlayer(cached); return; }
+
+      try {
+        // Fetch channel page via public CORS proxy → extract channelId
+        const proxy = 'https://api.allorigins.win/get?url=' +
+          encodeURIComponent(YT_CHANNEL);
+        const res  = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
+        const data = await res.json();
+        const m    = data.contents?.match(/"channelId":"(UC[\w-]{20,})"/);
+        if (m) {
+          localStorage.setItem(YT_LS_KEY, m[1]);
+          mountPlayer(m[1]);
+        } else {
+          showYtFallback();
+        }
+      } catch (_) {
+        showYtFallback();
+      }
+    }
+
+    initYouTube();
+
+    /* ══════════════════════════════════════════════
+       3. AGENDA ROWS — scroll entrance
+    ══════════════════════════════════════════════ */
+    const rows  = document.querySelectorAll('.date-row');
+    const rowObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); rowObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    rows.forEach((r, i) => { r.style.animationDelay = `${i * 75}ms`; rowObs.observe(r); });
+
+    /* ══════════════════════════════════════════════
+       4. GALLERY — touch pause
+    ══════════════════════════════════════════════ */
+    const track = document.getElementById('galleryTrack');
+    track.addEventListener('touchstart', () => track.style.animationPlayState = 'paused', { passive: true });
+    track.addEventListener('touchend',   () => track.style.animationPlayState = 'running', { passive: true });
+  </script>
+</body>
+</html>
