@@ -92,6 +92,11 @@
     .field input:focus,
     .field select:focus,
     .field textarea:focus { border-color: var(--gold); }
+    .field input[type="color"] {
+      height: 46px;
+      padding: 4px;
+      cursor: pointer;
+    }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -322,12 +327,12 @@
       <h1>La Once</h1>
       <p>Backoffice / Administración</p>
       <div class="field">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+        <label for="password">GitHub Token</label>
+        <input type="password" id="password" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" />
       </div>
       <button class="btn" id="loginBtn">Entrar</button>
       <p class="help" style="text-align:center;margin-top:16px;">
-        Si olvidaste la contraseña, se encuentra en el código de <code>morosho/index.html</code>.
+        Usá tu Personal Access Token con permiso de escritura sobre el repositorio.
       </p>
     </div>
   </div>
@@ -338,16 +343,11 @@
       <h1>Backoffice — La Once</h1>
       <div class="top__actions">
         <a class="btn btn--outline" href="../" target="_blank" rel="noopener">Ver sitio ↗</a>
-        <button class="btn btn--outline" id="downloadBtn">Descargar JSON</button>
         <button class="btn btn--danger" id="logoutBtn">Salir</button>
       </div>
     </header>
 
     <main class="main">
-      <div class="notice">
-        <strong>Importante:</strong> este panel vive en GitHub Pages (sitio estático). La contraseña solo oculta la interfaz; una persona con conocimientos técnicos puede inspeccionar el código. Para guardar cambios en el sitio real usá un <em>GitHub Personal Access Token</em> con permiso de escritura sobre este repositorio.
-      </div>
-
       <!-- DATOS GENERALES -->
       <section class="section">
         <h2>⚙️ Datos generales</h2>
@@ -363,6 +363,10 @@
           <div class="field">
             <label for="s_youtubeHandle">Usuario de YouTube</label>
             <input type="text" id="s_youtubeHandle" />
+          </div>
+          <div class="field">
+            <label for="s_youtubeVideoUrl">Video de YouTube (autoplay)</label>
+            <input type="text" id="s_youtubeVideoUrl" placeholder="https://youtu.be/..." />
           </div>
           <div class="field">
             <label for="s_agendaYear">Año de la agenda</label>
@@ -388,10 +392,21 @@
             <label for="s_ctaSub">Subtítulo CTA</label>
             <input type="text" id="s_ctaSub" />
           </div>
-          <div class="field" style="grid-column:1/-1;">
-            <label for="s_footerText">Texto del footer</label>
-            <input type="text" id="s_footerText" />
-          </div>
+        </div>
+      </section>
+
+      <!-- COLORES -->
+      <section class="section">
+        <h2>🎨 Colores del sitio</h2>
+        <div class="grid-3">
+          <div class="field"><label for="c_bg-deep">Fondo profundo</label><input type="color" id="c_bg-deep" /></div>
+          <div class="field"><label for="c_bg-mid">Fondo medio</label><input type="color" id="c_bg-mid" /></div>
+          <div class="field"><label for="c_purple-glow">Brillo púrpura</label><input type="color" id="c_purple-glow" /></div>
+          <div class="field"><label for="c_gold">Dorado</label><input type="color" id="c_gold" /></div>
+          <div class="field"><label for="c_gold-light">Dorado claro</label><input type="color" id="c_gold-light" /></div>
+          <div class="field"><label for="c_white">Blanco</label><input type="color" id="c_white" /></div>
+          <div class="field"><label for="c_lavender">Lavanda</label><input type="color" id="c_lavender" /></div>
+          <div class="field"><label for="c_muted">Muted</label><input type="color" id="c_muted" /></div>
         </div>
       </section>
 
@@ -428,11 +443,7 @@
     </main>
 
     <div class="save-panel">
-      <div class="save-panel__field">
-        <label for="githubToken">GitHub Token</label>
-        <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" />
-      </div>
-      <button class="btn btn--success" id="saveBtn">💾 Guardar en GitHub</button>
+      <button class="btn btn--success" id="saveBtn">💾 Guardar cambios</button>
     </div>
   </div>
 
@@ -442,10 +453,6 @@
     /* ══════════════════════════════════════════════
        CONFIGURACIÓN
     ══════════════════════════════════════════════ */
-    // Cambiá la contraseña: generá el SHA-256 de tu texto y reemplazá aquí.
-    // Ejemplo en consola del navegador:
-    // crypto.subtle.digest('SHA-256', new TextEncoder().encode('tupass')).then(b=>console.log(Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')))
-    const ADMIN_PASSWORD_HASH = 'eef9e8d9201e8c83d39ad11fd10b505022179598eeeffef85bad75d116455289'; // sha256('morosho')
     const REPO_OWNER = 'astorlucas';
     const REPO_NAME = 'la-once';
     const BRANCH = 'main';
@@ -455,16 +462,12 @@
        ESTADO
     ══════════════════════════════════════════════ */
     let data = null;
-    let galleryState = []; // array de {_id, src} para manejar reordenar/eliminar
+    let galleryState = [];
+    let githubToken = ''; // token ingresado al login
 
     /* ══════════════════════════════════════════════
        UTILIDADES
     ══════════════════════════════════════════════ */
-    async function sha256(text) {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
     function $(id) { return document.getElementById(id); }
 
     function showStatus(msg, type = 'ok') {
@@ -482,29 +485,47 @@
       return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
     }
 
+    function applyColors(colors) {
+      const root = document.documentElement;
+      Object.entries(colors || {}).forEach(([key, val]) => {
+        if (val) root.style.setProperty('--' + key, val);
+      });
+    }
+
     /* ══════════════════════════════════════════════
        LOGIN
     ══════════════════════════════════════════════ */
     async function checkLogin() {
-      const pass = $('password').value;
-      if (!pass) return showStatus('Ingresá la contraseña.', 'err');
-      const hash = await sha256(pass);
-      if (hash === ADMIN_PASSWORD_HASH) {
+      const token = $('password').value.trim();
+      if (!token) return showStatus('Ingresá tu GitHub Token.', 'err');
+
+      // Validamos el token intentando leer el archivo desde GitHub
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (!res.ok) throw new Error('Token inválido o sin permisos');
+        const meta = await res.json();
+        const content = JSON.parse(decodeURIComponent(escape(atob(meta.content))));
+        data = content;
+        githubToken = token;
+        sessionStorage.setItem('laonce_admin_token', token);
         $('loginView').classList.add('hidden');
         $('appView').classList.remove('hidden');
         localStorage.setItem('laonce_admin_session', Date.now().toString());
-        await initApp();
-      } else {
-        showStatus('Contraseña incorrecta.', 'err');
+        await initApp(true); // ya cargamos data desde GitHub
+      } catch (err) {
+        showStatus('No se pudo validar el token: ' + err.message, 'err');
       }
     }
 
     function logout() {
       localStorage.removeItem('laonce_admin_session');
+      sessionStorage.removeItem('laonce_admin_token');
+      githubToken = '';
       $('appView').classList.add('hidden');
       $('loginView').classList.remove('hidden');
       $('password').value = '';
-      $('githubToken').value = '';
     }
 
     /* ══════════════════════════════════════════════
@@ -520,9 +541,14 @@
         showStatus('No se pudo cargar data.json. Se usará una plantilla vacía.', 'err');
         data = {
           site: {
-            phone: '', phoneRaw: '', youtubeHandle: '', agendaYear: new Date().getFullYear(),
+            phone: '', phoneRaw: '', youtubeHandle: '', youtubeVideoUrl: '', agendaYear: new Date().getFullYear(),
             heroTagline: '', heroBadge: '', scrollHint: 'Ver agenda',
-            agendaEyebrow: 'Próximas fechas', ctaLabel: '', ctaTitle: '', ctaSub: '', footerText: ''
+            agendaEyebrow: 'Próximas fechas', ctaLabel: '', ctaTitle: '', ctaSub: ''
+          },
+          colors: {
+            'bg-deep': '#070010', 'bg-mid': '#110022', 'purple-glow': '#5c0fa0',
+            'gold': '#d4a017', 'gold-light': '#f2c94c', 'white': '#ffffff',
+            'lavender': '#dcc8f5', 'muted': '#9b7ec8'
           },
           heroDates: { left: [], right: [] },
           agenda: [],
@@ -546,13 +572,24 @@
       data.site.phoneRaw = $('s_phoneRaw').value;
       data.site.phoneLink = 'tel:' + $('s_phoneRaw').value;
       data.site.youtubeHandle = $('s_youtubeHandle').value;
+      data.site.youtubeVideoUrl = $('s_youtubeVideoUrl').value;
       data.site.agendaYear = parseInt($('s_agendaYear').value, 10) || new Date().getFullYear();
       data.site.heroTagline = $('s_heroTagline').value;
       data.site.heroBadge = $('s_heroBadge').value;
       data.site.agendaEyebrow = $('s_agendaEyebrow').value;
       data.site.ctaTitle = $('s_ctaTitle').value;
       data.site.ctaSub = $('s_ctaSub').value;
-      data.site.footerText = $('s_footerText').value;
+
+      data.colors = {
+        'bg-deep': $('c_bg-deep').value,
+        'bg-mid': $('c_bg-mid').value,
+        'purple-glow': $('c_purple-glow').value,
+        'gold': $('c_gold').value,
+        'gold-light': $('c_gold-light').value,
+        'white': $('c_white').value,
+        'lavender': $('c_lavender').value,
+        'muted': $('c_muted').value
+      };
     }
 
     /* ══════════════════════════════════════════════
@@ -735,8 +772,7 @@
     }
 
     async function saveToGitHub() {
-      const token = $('githubToken').value.trim();
-      if (!token) return showStatus('Falta el GitHub Token.', 'err');
+      if (!githubToken) return showStatus('No hay token de GitHub. Volvé a iniciar sesión.', 'err');
 
       readSiteFromForm();
       readListsFromForm();
@@ -746,7 +782,7 @@
       try {
         // Obtener SHA actual
         const metaRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`, {
-          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' }
+          headers: { 'Authorization': 'Bearer ' + githubToken, 'Accept': 'application/vnd.github.v3+json' }
         });
         if (!metaRes.ok) {
           const err = await metaRes.json();
@@ -757,7 +793,7 @@
         // Subir nuevo contenido
         const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
           method: 'PUT',
-          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+          headers: { 'Authorization': 'Bearer ' + githubToken, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: 'Actualización desde backoffice',
             content: content,
@@ -769,44 +805,43 @@
           const err = await putRes.json();
           throw new Error(err.message || 'Error al guardar.');
         }
-        showStatus('✅ Guardado en GitHub. En unos segundos se verá reflejado en el sitio.', 'ok');
+        showStatus('✅ Guardado. En unos segundos se verá reflejado en el sitio.', 'ok');
       } catch (err) {
         console.error(err);
         showStatus('Error: ' + err.message, 'err');
       }
     }
 
-    function downloadJSON() {
-      readSiteFromForm();
-      readListsFromForm();
-      const blob = new Blob([JSON.stringify(cleanDataForSave(), null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'data.json';
-      a.click();
-      URL.revokeObjectURL(url);
-      showStatus('📥 JSON descargado. Subilo manualmente a la raíz del repo.', 'ok');
-    }
-
     /* ══════════════════════════════════════════════
        INICIO
     ══════════════════════════════════════════════ */
-    async function initApp() {
-      await loadData();
+    async function initApp(skipLoad = false) {
+      if (!skipLoad) await loadData();
 
       // Rellenar formulario de site
       $('s_phone').value = data.site.phone || '';
       $('s_phoneRaw').value = data.site.phoneRaw || '';
       $('s_youtubeHandle').value = data.site.youtubeHandle || '';
+      $('s_youtubeVideoUrl').value = data.site.youtubeVideoUrl || '';
       $('s_agendaYear').value = data.site.agendaYear || new Date().getFullYear();
       $('s_heroTagline').value = data.site.heroTagline || '';
       $('s_heroBadge').value = data.site.heroBadge || '';
       $('s_agendaEyebrow').value = data.site.agendaEyebrow || '';
       $('s_ctaTitle').value = data.site.ctaTitle || '';
       $('s_ctaSub').value = data.site.ctaSub || '';
-      $('s_footerText').value = data.site.footerText || '';
 
+      // Colores
+      const c = data.colors || {};
+      $('c_bg-deep').value = c['bg-deep'] || '#070010';
+      $('c_bg-mid').value = c['bg-mid'] || '#110022';
+      $('c_purple-glow').value = c['purple-glow'] || '#5c0fa0';
+      $('c_gold').value = c['gold'] || '#d4a017';
+      $('c_gold-light').value = c['gold-light'] || '#f2c94c';
+      $('c_white').value = c['white'] || '#ffffff';
+      $('c_lavender').value = c['lavender'] || '#dcc8f5';
+      $('c_muted').value = c['muted'] || '#9b7ec8';
+
+      applyColors(data.colors);
       refreshAllLists();
     }
 
@@ -814,7 +849,6 @@
     $('password').addEventListener('keypress', e => { if (e.key === 'Enter') checkLogin(); });
     $('logoutBtn').addEventListener('click', logout);
     $('saveBtn').addEventListener('click', saveToGitHub);
-    $('downloadBtn').addEventListener('click', downloadJSON);
 
     $('addHeroLeft').addEventListener('click', () => {
       readListsFromForm();
@@ -837,9 +871,11 @@
       renderGalleryList();
     });
 
-    // Auto-login si la sesión existe hace menos de 8 horas
+    // Auto-login si la sesión existe hace menos de 8 horas y tenemos token guardado
     const session = localStorage.getItem('laonce_admin_session');
-    if (session && Date.now() - parseInt(session, 10) < 8 * 60 * 60 * 1000) {
+    const savedToken = sessionStorage.getItem('laonce_admin_token');
+    if (session && savedToken && Date.now() - parseInt(session, 10) < 8 * 60 * 60 * 1000) {
+      githubToken = savedToken;
       $('loginView').classList.add('hidden');
       $('appView').classList.remove('hidden');
       initApp();

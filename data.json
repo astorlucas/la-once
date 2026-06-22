@@ -4,6 +4,7 @@
     "phoneLink": "tel:098256836",
     "phoneRaw": "098256836",
     "youtubeHandle": "LAO11CE",
+    "youtubeVideoUrl": "",
     "heroTagline": "¡¡¡Esta Sonando!!!",
     "heroBadge": "En Vivo",
     "scrollHint": "Ver agenda",
@@ -11,8 +12,17 @@
     "agendaEyebrow": "Próximas fechas",
     "ctaLabel": "Reservá tu fecha",
     "ctaTitle": "Contrataciones",
-    "ctaSub": "Bailes • Fiestas privadas • Raids • Eventos",
-    "footerText": "© 2026 LUCAS ASTOR — Todos los derechos reservados a LA ONCE"
+    "ctaSub": "Bailes • Fiestas privadas • Raids • Eventos"
+  },
+  "colors": {
+    "bg-deep": "#070010",
+    "bg-mid": "#110022",
+    "purple-glow": "#5c0fa0",
+    "gold": "#d4a017",
+    "gold-light": "#f2c94c",
+    "white": "#ffffff",
+    "lavender": "#dcc8f5",
+    "muted": "#9b7ec8"
   },
   "heroDates": {
     "left": [
