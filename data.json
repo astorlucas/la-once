@@ -16,21 +16,61 @@
   },
   "heroDates": {
     "left": [
-      { "date": "20 Junio", "type": "Baile", "place": "Goñi" },
-      { "date": "07 Septiembre", "type": "Raid", "place": "Capilla del Sauce" },
-      { "date": "03 Octubre", "type": "Raid", "place": "Batlle y Ordóñez" }
+      {
+        "date": "07 Septiembre",
+        "type": "Raid",
+        "place": "Capilla del Sauce"
+      },
+      {
+        "date": "03 Octubre",
+        "type": "Raid",
+        "place": "Batlle y Ordóñez"
+      }
     ],
     "right": [
-      { "date": "11 Julio", "type": "Baile", "place": "Sarandí del Yi" },
-      { "date": "12 Septiembre", "type": "Fiesta Privada", "place": "" }
+      {
+        "date": "11 Julio",
+        "type": "Baile",
+        "place": "Sarandí del Yi"
+      },
+      {
+        "date": "12 Septiembre",
+        "type": "Fiesta Privada",
+        "place": ""
+      }
     ]
   },
   "agenda": [
-    { "day": "20", "month": "Junio", "event": "Baile", "place": "Goñi" },
-    { "day": "11", "month": "Julio", "event": "Baile", "place": "Sarandí del Yi" },
-    { "day": "07", "month": "Septiembre", "event": "Raid", "place": "Capilla del Sauce" },
-    { "day": "12", "month": "Septiembre", "event": "Fiesta Privada", "place": "" },
-    { "day": "03", "month": "Octubre", "event": "Raid", "place": "Batlle y Ordóñez" }
+    {
+      "day": "20",
+      "month": "Junio",
+      "event": "Baile",
+      "place": "Goñi"
+    },
+    {
+      "day": "11",
+      "month": "Julio",
+      "event": "Baile",
+      "place": "Sarandí del Yi"
+    },
+    {
+      "day": "07",
+      "month": "Septiembre",
+      "event": "Raid",
+      "place": "Capilla del Sauce"
+    },
+    {
+      "day": "12",
+      "month": "Septiembre",
+      "event": "Fiesta Privada",
+      "place": ""
+    },
+    {
+      "day": "03",
+      "month": "Octubre",
+      "event": "Raid",
+      "place": "Batlle y Ordóñez"
+    }
   ],
   "gallery": [
     "assets/IMG_4342.JPG.jpeg",
