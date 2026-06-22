@@ -4,7 +4,7 @@
     "phoneLink": "tel:098256836",
     "phoneRaw": "098256836",
     "youtubeHandle": "LAO11CE",
-    "youtubeVideoUrl": "",
+    "youtubeVideoUrl": "https://www.youtube.com/watch?v=OqgEo2I__M0",
     "heroTagline": "¡¡¡Esta Sonando!!!",
     "heroBadge": "En Vivo",
     "scrollHint": "Ver agenda",
@@ -82,16 +82,5 @@
       "place": "Batlle y Ordóñez"
     }
   ],
-  "gallery": [
-    "assets/IMG_4342.JPG.jpeg",
-    "assets/IMG_7644.JPG.jpeg",
-    "assets/IMG_4233.JPG.jpeg",
-    "assets/IMG_7651.JPG.jpeg",
-    "assets/IMG_7768.JPG.jpeg",
-    "assets/IMG_4253.JPG.jpeg",
-    "assets/IMG_4322.JPG.jpeg",
-    "assets/IMG_4347.JPG.jpeg",
-    "assets/IMG_7690.JPG.jpeg",
-    "assets/IMG_7705.JPG.jpeg"
-  ]
+  "gallery": []
 }
