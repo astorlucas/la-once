@@ -4,33 +4,31 @@ Sitio oficial de **La Once**, banda uruguaya de cumbia. Servido con GitHub Pages
 
 ## Backoffice
 
-El sitio incluye un panel de administración para modificar fechas, teléfono, colores, el video de YouTube en autoplay y otros datos sin tener que editar código.
+El sitio incluye un panel de administración para modificar fechas, teléfono, colores, el video de YouTube y otros datos sin tener que editar código.
 
-### Acceder
+### Para el dueño de la banda
 
 Andá a: `https://la-once.com/morosho`
 
-Para entrar usá tu **GitHub Personal Access Token** con permiso de escritura sobre el repositorio `astorlucas/la-once`. El mismo token se usa para guardar los cambios.
+Usá la **contraseña de administración** que te dieron. Desde ahí podés:
 
-### Crear el token
+- Cambiar el teléfono de contrataciones.
+- Cambiar el usuario y video de YouTube.
+- Modificar los colores del sitio.
+- Agregar, editar o eliminar fechas de shows.
+- Subir imágenes directamente a la galería.
+
+Cuando termines de editar, hacé clic en **Guardar cambios**.
+
+### Configuración técnica (solo desarrollador)
+
+La contraseña del backoffice es un **GitHub Personal Access Token** con permiso de escritura sobre el repositorio `astorlucas/la-once`.
 
 1. Andá a GitHub → Settings → Developer settings → Personal access tokens.
-2. Generá un token con permiso de escritura sobre el repositorio `astorlucas/la-once`.
+2. Generá un token con permiso de escritura sobre el repositorio.
    - Token clásico: marcá el scope `repo`.
    - Fine-grained: dale acceso de lectura/escritura a `Contents`.
-3. Copiá el token y usalo como contraseña en `/morosho`.
-
-### Qué se puede editar
-
-- Teléfono de contrataciones.
-- Usuario de YouTube.
-- **Video de YouTube para autoplay** (si ponés una URL de video específica, se usa ese; si no, se usa el canal).
-- Año y subtítulo de la agenda.
-- Frases del hero.
-- **Colores del sitio** con color picker.
-- Fechas de las columnas laterales.
-- Agenda completa de shows.
-- Lista de imágenes de la galería (solo las rutas; las imágenes se suben a `assets/`).
+3. Ese token es la contraseña que se le entrega al usuario del backoffice.
 
 ### Estructura
 

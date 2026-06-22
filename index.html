@@ -1085,8 +1085,24 @@
         modestbranding:  1,
         playsinline:     1,
         iv_load_policy:  3,
+        enablejsapi:     1,
       };
-      const playerConfig = { playerVars, events: { onReady: e => { e.target.mute(); e.target.playVideo(); }, onError: showYtFallback } };
+
+      const events = {
+        onReady: e => {
+          try {
+            e.target.mute();
+            e.target.playVideo();
+          } catch (_) {
+            // Algunos navegadores bloquean autoplay a pesar de mute; el player queda visible con el play disponible.
+          }
+        }
+      };
+      if (opts.fallbackOnError) {
+        events.onError = showYtFallback;
+      }
+
+      const playerConfig = { playerVars, events };
 
       if (opts.videoId) {
         playerConfig.videoId = opts.videoId;
@@ -1109,27 +1125,37 @@
     async function initYouTube(videoUrl) {
       const videoId = extractYouTubeVideoId(videoUrl);
       if (videoId) {
-        mountPlayer({ videoId });
+        // Video específico: no mostramos fallback ante errores de reproducción para que el usuario vea el player.
+        mountPlayer({ videoId, fallbackOnError: false });
         return;
       }
 
       // Check localStorage for cached channel ID
       const cached = localStorage.getItem(YT_LS_KEY);
-      if (cached) { mountPlayer({ channelId: cached }); return; }
+      if (cached) { mountPlayer({ channelId: cached, fallbackOnError: true }); return; }
 
       try {
-        // Fetch channel page via public CORS proxy → extract channelId
-        const proxy = 'https://api.allorigins.win/get?url=' +
-          encodeURIComponent(YT_CHANNEL);
-        const res  = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
-        const data = await res.json();
-        const m    = data.contents?.match(/"channelId":"(UC[\w-]{20,})"/);
-        if (m) {
-          localStorage.setItem(YT_LS_KEY, m[1]);
-          mountPlayer({ channelId: m[1] });
-        } else {
-          showYtFallback();
+        // Intentamos con varios proxies CORS públicos para obtener el channelId
+        const proxies = [
+          'https://api.allorigins.win/get?url=',
+          'https://api.codetabs.com/v1/proxy?quest=',
+        ];
+        let lastErr;
+        for (const proxy of proxies) {
+          try {
+            const res = await fetch(proxy + encodeURIComponent(YT_CHANNEL), { signal: AbortSignal.timeout(8000) });
+            const data = await res.json();
+            const html = data.contents || data;
+            const m = html.match(/"channelId":"(UC[\w-]{20,})"/);
+            if (m) {
+              localStorage.setItem(YT_LS_KEY, m[1]);
+              mountPlayer({ channelId: m[1], fallbackOnError: true });
+              return;
+            }
+          } catch (e) { lastErr = e; }
         }
+        console.warn('No se pudo obtener channelId', lastErr);
+        showYtFallback();
       } catch (_) {
         showYtFallback();
       }

@@ -97,6 +97,20 @@
       padding: 4px;
       cursor: pointer;
     }
+    .field input[type="file"] {
+      padding: 8px;
+      font-size: .85rem;
+      cursor: pointer;
+    }
+    .upload-bar {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .upload-bar .field { flex: 1; min-width: 220px; margin-bottom: 0; }
+    .upload-bar .btn { margin-bottom: 2px; }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -327,12 +341,12 @@
       <h1>La Once</h1>
       <p>Backoffice / Administración</p>
       <div class="field">
-        <label for="password">GitHub Token</label>
-        <input type="password" id="password" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" />
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" placeholder="••••••••••••••••••••" autocomplete="off" />
       </div>
       <button class="btn" id="loginBtn">Entrar</button>
       <p class="help" style="text-align:center;margin-top:16px;">
-        Usá tu Personal Access Token con permiso de escritura sobre el repositorio.
+        Contraseña de administración del sitio.
       </p>
     </div>
   </div>
@@ -365,8 +379,9 @@
             <input type="text" id="s_youtubeHandle" />
           </div>
           <div class="field">
-            <label for="s_youtubeVideoUrl">Video de YouTube (autoplay)</label>
+            <label for="s_youtubeVideoUrl">Video de YouTube</label>
             <input type="text" id="s_youtubeVideoUrl" placeholder="https://youtu.be/..." />
+            <p class="help">Si lo dejás vacío se usa el canal configurado arriba.</p>
           </div>
           <div class="field">
             <label for="s_agendaYear">Año de la agenda</label>
@@ -434,10 +449,17 @@
       <!-- GALLERY -->
       <section class="section">
         <h2>🖼️ Galería</h2>
+        <div class="upload-bar">
+          <div class="field">
+            <label for="galleryUpload">Subir imagen nueva</label>
+            <input type="file" id="galleryUpload" accept="image/*" />
+          </div>
+          <button class="btn" id="uploadGalleryBtn">Subir</button>
+        </div>
         <p class="help" style="margin-bottom:14px;">
-          Para cambiar imágenes, subí los archivos a <code>assets/</code> en el repositorio y luego actualizá las rutas aquí.
+          También podés agregar manualmente una ruta existente.
         </p>
-        <div class="add-bar"><button class="btn" id="addGallery">+ Agregar imagen</button></div>
+        <div class="add-bar"><button class="btn" id="addGallery">+ Agregar ruta manual</button></div>
         <div class="list" id="galleryList"></div>
       </section>
     </main>
@@ -463,7 +485,7 @@
     ══════════════════════════════════════════════ */
     let data = null;
     let galleryState = [];
-    let githubToken = ''; // token ingresado al login
+    let adminToken = ''; // clave de sesión ingresada al login
 
     /* ══════════════════════════════════════════════
        UTILIDADES
@@ -496,33 +518,33 @@
        LOGIN
     ══════════════════════════════════════════════ */
     async function checkLogin() {
-      const token = $('password').value.trim();
-      if (!token) return showStatus('Ingresá tu GitHub Token.', 'err');
+      const key = $('password').value.trim();
+      if (!key) return showStatus('Ingresá la contraseña.', 'err');
 
-      // Validamos el token intentando leer el archivo desde GitHub
+      // Validamos la contraseña intentando leer el archivo desde el servidor
       try {
         const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`, {
-          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' }
+          headers: { 'Authorization': 'Bearer ' + key, 'Accept': 'application/vnd.github.v3+json' }
         });
-        if (!res.ok) throw new Error('Token inválido o sin permisos');
+        if (!res.ok) throw new Error('Contraseña incorrecta o sin permisos');
         const meta = await res.json();
         const content = JSON.parse(decodeURIComponent(escape(atob(meta.content))));
         data = content;
-        githubToken = token;
-        sessionStorage.setItem('laonce_admin_token', token);
+        adminToken = key;
+        sessionStorage.setItem('laonce_admin_key', key);
         $('loginView').classList.add('hidden');
         $('appView').classList.remove('hidden');
         localStorage.setItem('laonce_admin_session', Date.now().toString());
-        await initApp(true); // ya cargamos data desde GitHub
+        await initApp(true); // ya cargamos data desde el servidor
       } catch (err) {
-        showStatus('No se pudo validar el token: ' + err.message, 'err');
+        showStatus('No se pudo validar la contraseña: ' + err.message, 'err');
       }
     }
 
     function logout() {
       localStorage.removeItem('laonce_admin_session');
-      sessionStorage.removeItem('laonce_admin_token');
-      githubToken = '';
+      sessionStorage.removeItem('laonce_admin_key');
+      adminToken = '';
       $('appView').classList.add('hidden');
       $('loginView').classList.remove('hidden');
       $('password').value = '';
@@ -771,8 +793,8 @@
       return clone;
     }
 
-    async function saveToGitHub() {
-      if (!githubToken) return showStatus('No hay token de GitHub. Volvé a iniciar sesión.', 'err');
+    async function saveChanges() {
+      if (!adminToken) return showStatus('No hay sesión activa. Volvé a iniciar sesión.', 'err');
 
       readSiteFromForm();
       readListsFromForm();
@@ -782,18 +804,18 @@
       try {
         // Obtener SHA actual
         const metaRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`, {
-          headers: { 'Authorization': 'Bearer ' + githubToken, 'Accept': 'application/vnd.github.v3+json' }
+          headers: { 'Authorization': 'Bearer ' + adminToken, 'Accept': 'application/vnd.github.v3+json' }
         });
         if (!metaRes.ok) {
           const err = await metaRes.json();
-          throw new Error(err.message || 'No se pudo leer el archivo. Verificá el token.');
+          throw new Error(err.message || 'No se pudo leer el archivo. Volvé a iniciar sesión.');
         }
         const meta = await metaRes.json();
 
         // Subir nuevo contenido
         const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
           method: 'PUT',
-          headers: { 'Authorization': 'Bearer ' + githubToken, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+          headers: { 'Authorization': 'Bearer ' + adminToken, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: 'Actualización desde backoffice',
             content: content,
@@ -848,7 +870,7 @@
     $('loginBtn').addEventListener('click', checkLogin);
     $('password').addEventListener('keypress', e => { if (e.key === 'Enter') checkLogin(); });
     $('logoutBtn').addEventListener('click', logout);
-    $('saveBtn').addEventListener('click', saveToGitHub);
+    $('saveBtn').addEventListener('click', saveChanges);
 
     $('addHeroLeft').addEventListener('click', () => {
       readListsFromForm();
@@ -865,17 +887,76 @@
       data.agenda.push({ _id: generateId(), day: '', month: '', event: '', place: '' });
       renderAgendaList();
     });
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function sanitizeFileName(name) {
+      return name.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]/g, '-')
+        .replace(/-+/g, '-')
+        .toLowerCase();
+    }
+
+    async function uploadGalleryImage() {
+      const input = $('galleryUpload');
+      const file = input.files?.[0];
+      if (!file) return showStatus('Seleccioná una imagen primero.', 'err');
+      if (!adminToken) return showStatus('No hay sesión activa. Volvé a iniciar sesión.', 'err');
+
+      try {
+        const base64 = await fileToBase64(file);
+        const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
+        const baseName = sanitizeFileName(file.name.replace(/\.[^.]+$/, ''));
+        const uniqueName = `${baseName}-${Date.now()}.${ext}`;
+        const path = `assets/${uniqueName}`;
+
+        const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+          method: 'PUT',
+          headers: { 'Authorization': 'Bearer ' + adminToken, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Subida de imagen ${uniqueName} desde backoffice`,
+            content: base64,
+            branch: BRANCH
+          })
+        });
+        if (!putRes.ok) {
+          const err = await putRes.json();
+          throw new Error(err.message || 'Error al subir la imagen.');
+        }
+
+        readListsFromForm();
+        galleryState.push({ _id: generateId(), src: path });
+        renderGalleryList();
+        input.value = '';
+        showStatus(`✅ Imagen subida: ${uniqueName}`, 'ok');
+      } catch (err) {
+        console.error(err);
+        showStatus('Error al subir: ' + err.message, 'err');
+      }
+    }
+
+    $('uploadGalleryBtn').addEventListener('click', uploadGalleryImage);
+
     $('addGallery').addEventListener('click', () => {
       readListsFromForm();
       galleryState.push({ _id: generateId(), src: 'assets/nueva-imagen.jpg' });
       renderGalleryList();
     });
 
-    // Auto-login si la sesión existe hace menos de 8 horas y tenemos token guardado
+    // Auto-login si la sesión existe hace menos de 8 horas y tenemos clave guardada
     const session = localStorage.getItem('laonce_admin_session');
-    const savedToken = sessionStorage.getItem('laonce_admin_token');
-    if (session && savedToken && Date.now() - parseInt(session, 10) < 8 * 60 * 60 * 1000) {
-      githubToken = savedToken;
+    const savedKey = sessionStorage.getItem('laonce_admin_key');
+    if (session && savedKey && Date.now() - parseInt(session, 10) < 8 * 60 * 60 * 1000) {
+      adminToken = savedKey;
       $('loginView').classList.add('hidden');
       $('appView').classList.remove('hidden');
       initApp();
