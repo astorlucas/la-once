@@ -764,13 +764,13 @@
   <!-- ═══ TOP BAR ══════════════════════════════════════ -->
   <header class="topbar">
     <img class="topbar__logo" src="assets/Logo%20sin%20fondo.png" alt="La Once" />
-    <a class="topbar__contact" href="tel:098256836">
+    <a class="topbar__contact" id="topbarPhoneLink" href="tel:098256836">
       <div class="topbar__icon">
         <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
       </div>
       <div>
         <div class="topbar__label">Contrataciones</div>
-        <div class="topbar__num">098 256 836</div>
+        <div class="topbar__num" id="topbarPhone">098 256 836</div>
       </div>
     </a>
   </header>
@@ -794,7 +794,7 @@
       <div class="yt-block">
         <div class="yt-block__header">
           <span class="yt-block__label">Videos</span>
-          <a class="yt-block__link" href="https://www.youtube.com/@LAO11CE" target="_blank" rel="noopener">
+          <a class="yt-block__link" id="ytChannelLink" href="https://www.youtube.com/@LAO11CE" target="_blank" rel="noopener">
             Ver canal →
           </a>
         </div>
@@ -804,29 +804,13 @@
           <div class="yt-fallback" id="ytFallback" style="display:none;">
             <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
             <span>La Once en YouTube</span>
-            <a href="https://www.youtube.com/@LAO11CE" target="_blank" rel="noopener">Abrir canal ↗</a>
+            <a id="ytFallbackLink" href="https://www.youtube.com/@LAO11CE" target="_blank" rel="noopener">Abrir canal ↗</a>
           </div>
         </div>
       </div>
 
       <!-- Fechas -->
-      <div class="hero__dates-group">
-        <div class="hd-item">
-          <span class="hd-item__date">20 Junio</span>
-          <span class="hd-item__type">Baile</span>
-          <span class="hd-item__place">Goñi</span>
-        </div>
-        <div class="hd-item">
-          <span class="hd-item__date">07 Septiembre</span>
-          <span class="hd-item__type">Raid</span>
-          <span class="hd-item__place">Capilla del Sauce</span>
-        </div>
-        <div class="hd-item">
-          <span class="hd-item__date">03 Octubre</span>
-          <span class="hd-item__type">Raid</span>
-          <span class="hd-item__place">Batlle y Ordóñez</span>
-        </div>
-      </div>
+      <div class="hero__dates-group" id="heroDatesLeft"></div>
     </aside>
 
     <!-- ── Centro: banda arriba, logo abajo ── -->
@@ -836,26 +820,18 @@
         <img class="hero__band-img" src="assets/BandaSINFONDO.png" alt="La Once banda" />
       </div>
       <div class="hero__bottom">
-        <p class="hero__tagline">¡¡¡Esta Sonando!!!</p>
-        <div class="hero__badge">En Vivo</div>
+        <p class="hero__tagline" id="heroTagline">¡¡¡Esta Sonando!!!</p>
+        <div class="hero__badge" id="heroBadge">En Vivo</div>
         <div class="hero__scroll-hint">
           <div class="scroll-mouse"></div>
-          <span>Ver agenda</span>
+          <span id="scrollHint">Ver agenda</span>
         </div>
       </div>
     </div>
 
     <!-- ── Columna derecha: fechas ── -->
     <aside class="hero__right" id="heroRight">
-      <div class="hd-item hd-item--right">
-        <span class="hd-item__date">11 Julio</span>
-        <span class="hd-item__type">Baile</span>
-        <span class="hd-item__place">Sarandí del Yi</span>
-      </div>
-      <div class="hd-item hd-item--right">
-        <span class="hd-item__date">12 Septiembre</span>
-        <span class="hd-item__type">Fiesta Privada</span>
-      </div>
+      <div class="hero__dates-group" id="heroDatesRight" style="align-items:flex-start;"></div>
     </aside>
 
   </section>
@@ -864,82 +840,161 @@
   <section class="gallery-strip">
     <p class="gallery-strip__label">La banda en acción</p>
     <div class="gallery-wrapper">
-      <div class="gallery-track" id="galleryTrack">
-        <img src="assets/IMG_4342.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7644.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4233.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7651.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7768.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4253.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4322.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4347.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7690.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7705.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4342.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7644.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4233.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7651.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7768.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4253.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4322.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_4347.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7690.JPG.jpeg" alt="La Once en vivo" />
-        <img src="assets/IMG_7705.JPG.jpeg" alt="La Once en vivo" />
-      </div>
+      <div class="gallery-track" id="galleryTrack"></div>
     </div>
   </section>
 
   <!-- ═══ AGENDA ════════════════════════════════════════ -->
   <section class="agenda" id="agenda">
-    <p class="eyebrow">Próximas fechas</p>
-    <h2 class="section-title">Agenda 2026</h2>
-    <div class="dates-list">
-      <div class="date-row">
-        <div class="date-row__day"><span class="date-row__num">20</span><span class="date-row__month">Junio</span></div>
-        <div class="date-row__info"><span class="date-row__event">Baile</span><span class="date-row__place">Goñi</span></div>
-        <span class="date-row__dot"></span>
-      </div>
-      <div class="date-row">
-        <div class="date-row__day"><span class="date-row__num">11</span><span class="date-row__month">Julio</span></div>
-        <div class="date-row__info"><span class="date-row__event">Baile</span><span class="date-row__place">Sarandí del Yi</span></div>
-        <span class="date-row__dot"></span>
-      </div>
-      <div class="date-row">
-        <div class="date-row__day"><span class="date-row__num">07</span><span class="date-row__month">Septiembre</span></div>
-        <div class="date-row__info"><span class="date-row__event">Raid</span><span class="date-row__place">Capilla del Sauce</span></div>
-        <span class="date-row__dot"></span>
-      </div>
-      <div class="date-row">
-        <div class="date-row__day"><span class="date-row__num">12</span><span class="date-row__month">Septiembre</span></div>
-        <div class="date-row__info"><span class="date-row__event">Fiesta Privada</span><span class="date-row__place">&mdash;</span></div>
-        <span class="date-row__dot"></span>
-      </div>
-      <div class="date-row">
-        <div class="date-row__day"><span class="date-row__num">03</span><span class="date-row__month">Octubre</span></div>
-        <div class="date-row__info"><span class="date-row__event">Raid</span><span class="date-row__place">Batlle y Ordóñez</span></div>
-        <span class="date-row__dot"></span>
-      </div>
-    </div>
+    <p class="eyebrow" id="agendaEyebrow">Próximas fechas</p>
+    <h2 class="section-title" id="agendaTitle">Agenda 2026</h2>
+    <div class="dates-list" id="agendaList"></div>
   </section>
 
   <!-- ═══ CTA BANNER ═══════════════════════════════════ -->
   <section class="cta-banner">
-    <p class="cta-banner__label">Reservá tu fecha</p>
-    <h2 class="cta-banner__title">Contrataciones</h2>
-    <p class="cta-banner__sub">Bailes &bull; Fiestas privadas &bull; Raids &bull; Eventos</p>
-    <a class="cta-banner__phone" href="tel:098256836">
+    <p class="cta-banner__label" id="ctaLabel">Reservá tu fecha</p>
+    <h2 class="cta-banner__title" id="ctaTitle">Contrataciones</h2>
+    <p class="cta-banner__sub" id="ctaSub">Bailes &bull; Fiestas privadas &bull; Raids &bull; Eventos</p>
+    <a class="cta-banner__phone" id="ctaPhoneLink" href="tel:098256836">
       <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-      098 256 836
+      <span id="ctaPhone">098 256 836</span>
     </a>
   </section>
 
   <!-- ═══ FOOTER ════════════════════════════════════════ -->
   <footer>
     <img src="assets/Logo%20sin%20fondo.png" alt="La Once" />
-    <p>&copy; 2026 LUCAS ASTOR &mdash; Todos los derechos reservados a LA ONCE</p>
+    <p id="footerText">&copy; 2026 LUCAS ASTOR &mdash; Todos los derechos reservados a LA ONCE</p>
   </footer>
 
   <script>
+    /* ══════════════════════════════════════════════
+       DATOS EDITABLES — fallback + carga dinámica
+    ══════════════════════════════════════════════ */
+    const DEFAULT_DATA = {
+      "site": {
+        "phone": "098 256 836",
+        "phoneLink": "tel:098256836",
+        "phoneRaw": "098256836",
+        "youtubeHandle": "LAO11CE",
+        "heroTagline": "¡¡¡Esta Sonando!!!",
+        "heroBadge": "En Vivo",
+        "scrollHint": "Ver agenda",
+        "agendaYear": 2026,
+        "agendaEyebrow": "Próximas fechas",
+        "ctaLabel": "Reservá tu fecha",
+        "ctaTitle": "Contrataciones",
+        "ctaSub": "Bailes • Fiestas privadas • Raids • Eventos",
+        "footerText": "© 2026 LUCAS ASTOR — Todos los derechos reservados a LA ONCE"
+      },
+      "heroDates": {
+        "left": [
+          { "date": "20 Junio", "type": "Baile", "place": "Goñi" },
+          { "date": "07 Septiembre", "type": "Raid", "place": "Capilla del Sauce" },
+          { "date": "03 Octubre", "type": "Raid", "place": "Batlle y Ordóñez" }
+        ],
+        "right": [
+          { "date": "11 Julio", "type": "Baile", "place": "Sarandí del Yi" },
+          { "date": "12 Septiembre", "type": "Fiesta Privada", "place": "" }
+        ]
+      },
+      "agenda": [
+        { "day": "20", "month": "Junio", "event": "Baile", "place": "Goñi" },
+        { "day": "11", "month": "Julio", "event": "Baile", "place": "Sarandí del Yi" },
+        { "day": "07", "month": "Septiembre", "event": "Raid", "place": "Capilla del Sauce" },
+        { "day": "12", "month": "Septiembre", "event": "Fiesta Privada", "place": "" },
+        { "day": "03", "month": "Octubre", "event": "Raid", "place": "Batlle y Ordóñez" }
+      ],
+      "gallery": [
+        "assets/IMG_4342.JPG.jpeg", "assets/IMG_7644.JPG.jpeg", "assets/IMG_4233.JPG.jpeg",
+        "assets/IMG_7651.JPG.jpeg", "assets/IMG_7768.JPG.jpeg", "assets/IMG_4253.JPG.jpeg",
+        "assets/IMG_4322.JPG.jpeg", "assets/IMG_4347.JPG.jpeg", "assets/IMG_7690.JPG.jpeg",
+        "assets/IMG_7705.JPG.jpeg"
+      ]
+    };
+
+    async function loadData() {
+      try {
+        const res = await fetch('data.json?v=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.warn('No se pudo cargar data.json, usando fallback', err);
+        return DEFAULT_DATA;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+    }
+
+    function renderSite(data) {
+      const s = data.site || DEFAULT_DATA.site;
+
+      // Teléfono
+      document.getElementById('topbarPhoneLink').href = s.phoneLink;
+      document.getElementById('topbarPhone').textContent = s.phone;
+      document.getElementById('ctaPhoneLink').href = s.phoneLink;
+      document.getElementById('ctaPhone').textContent = s.phone;
+
+      // YouTube
+      const ytUrl = 'https://www.youtube.com/@' + (s.youtubeHandle || 'LAO11CE');
+      document.getElementById('ytChannelLink').href = ytUrl;
+      document.getElementById('ytFallbackLink').href = ytUrl;
+
+      // Hero textos
+      document.getElementById('heroTagline').textContent = s.heroTagline;
+      document.getElementById('heroBadge').textContent = s.heroBadge;
+      document.getElementById('scrollHint').textContent = s.scrollHint;
+
+      // Agenda textos
+      document.getElementById('agendaEyebrow').textContent = s.agendaEyebrow;
+      document.getElementById('agendaTitle').textContent = 'Agenda ' + (s.agendaYear || new Date().getFullYear());
+
+      // CTA
+      document.getElementById('ctaLabel').textContent = s.ctaLabel;
+      document.getElementById('ctaTitle').textContent = s.ctaTitle;
+      document.getElementById('ctaSub').textContent = s.ctaSub;
+
+      // Footer
+      document.getElementById('footerText').textContent = s.footerText;
+
+      // Hero dates
+      const leftWrap = document.getElementById('heroDatesLeft');
+      const rightWrap = document.getElementById('heroDatesRight');
+      leftWrap.innerHTML = (data.heroDates?.left || []).map(item => `
+        <div class="hd-item">
+          <span class="hd-item__date">${escapeHtml(item.date)}</span>
+          <span class="hd-item__type">${escapeHtml(item.type)}</span>
+          ${item.place ? `<span class="hd-item__place">${escapeHtml(item.place)}</span>` : ''}
+        </div>
+      `).join('');
+      rightWrap.innerHTML = (data.heroDates?.right || []).map(item => `
+        <div class="hd-item hd-item--right">
+          <span class="hd-item__date">${escapeHtml(item.date)}</span>
+          <span class="hd-item__type">${escapeHtml(item.type)}</span>
+          ${item.place ? `<span class="hd-item__place">${escapeHtml(item.place)}</span>` : ''}
+        </div>
+      `).join('');
+
+      // Agenda
+      const agendaWrap = document.getElementById('agendaList');
+      agendaWrap.innerHTML = (data.agenda || []).map(item => `
+        <div class="date-row">
+          <div class="date-row__day"><span class="date-row__num">${escapeHtml(item.day)}</span><span class="date-row__month">${escapeHtml(item.month)}</span></div>
+          <div class="date-row__info"><span class="date-row__event">${escapeHtml(item.event)}</span><span class="date-row__place">${item.place ? escapeHtml(item.place) : '—'}</span></div>
+          <span class="date-row__dot"></span>
+        </div>
+      `).join('');
+
+      // Gallery (duplicada para animación infinita)
+      const track = document.getElementById('galleryTrack');
+      const images = (data.gallery || []).map(src => `<img src="${escapeHtml(src)}" alt="La Once en vivo" />`).join('');
+      track.innerHTML = images + images;
+    }
+
     /* ══════════════════════════════════════════════
        1. COLUMNAS LATERALES — reveal + fade scroll
     ══════════════════════════════════════════════ */
@@ -973,8 +1028,8 @@
     /* ══════════════════════════════════════════════
        2. YOUTUBE PLAYER — channel ID via CORS proxy
     ══════════════════════════════════════════════ */
-    const YT_HANDLE   = 'LAO11CE';
-    const YT_CHANNEL  = `https://www.youtube.com/@${YT_HANDLE}`;
+    let YT_HANDLE   = 'LAO11CE';
+    let YT_CHANNEL  = `https://www.youtube.com/@${YT_HANDLE}`;
     const YT_LS_KEY   = 'laonce_yt_cid';
     const ytFallback  = document.getElementById('ytFallback');
     let   ytPlayer;
@@ -1044,25 +1099,44 @@
       }
     }
 
-    initYouTube();
-
     /* ══════════════════════════════════════════════
        3. AGENDA ROWS — scroll entrance
     ══════════════════════════════════════════════ */
-    const rows  = document.querySelectorAll('.date-row');
-    const rowObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); rowObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.15 });
-    rows.forEach((r, i) => { r.style.animationDelay = `${i * 75}ms`; rowObs.observe(r); });
+    function initAgendaObserver() {
+      const rows  = document.querySelectorAll('.date-row');
+      const rowObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); rowObs.unobserve(e.target); }
+        });
+      }, { threshold: 0.15 });
+      rows.forEach((r, i) => { r.style.animationDelay = `${i * 75}ms`; rowObs.observe(r); });
+    }
 
     /* ══════════════════════════════════════════════
        4. GALLERY — touch pause
     ══════════════════════════════════════════════ */
-    const track = document.getElementById('galleryTrack');
-    track.addEventListener('touchstart', () => track.style.animationPlayState = 'paused', { passive: true });
-    track.addEventListener('touchend',   () => track.style.animationPlayState = 'running', { passive: true });
+    function initGalleryTouch() {
+      const track = document.getElementById('galleryTrack');
+      track.addEventListener('touchstart', () => track.style.animationPlayState = 'paused', { passive: true });
+      track.addEventListener('touchend',   () => track.style.animationPlayState = 'running', { passive: true });
+    }
+
+    /* ══════════════════════════════════════════════
+       INICIALIZACIÓN
+    ══════════════════════════════════════════════ */
+    (async function boot() {
+      const data = await loadData();
+      renderSite(data);
+
+      if (data.site?.youtubeHandle) {
+        YT_HANDLE = data.site.youtubeHandle;
+        YT_CHANNEL = `https://www.youtube.com/@${YT_HANDLE}`;
+      }
+
+      initYouTube();
+      initAgendaObserver();
+      initGalleryTouch();
+    })();
   </script>
 </body>
 </html>

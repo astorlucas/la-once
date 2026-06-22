@@ -1,0 +1,47 @@
+{
+  "site": {
+    "phone": "098 256 836",
+    "phoneLink": "tel:098256836",
+    "phoneRaw": "098256836",
+    "youtubeHandle": "LAO11CE",
+    "heroTagline": "¡¡¡Esta Sonando!!!",
+    "heroBadge": "En Vivo",
+    "scrollHint": "Ver agenda",
+    "agendaYear": 2026,
+    "agendaEyebrow": "Próximas fechas",
+    "ctaLabel": "Reservá tu fecha",
+    "ctaTitle": "Contrataciones",
+    "ctaSub": "Bailes • Fiestas privadas • Raids • Eventos",
+    "footerText": "© 2026 LUCAS ASTOR — Todos los derechos reservados a LA ONCE"
+  },
+  "heroDates": {
+    "left": [
+      { "date": "20 Junio", "type": "Baile", "place": "Goñi" },
+      { "date": "07 Septiembre", "type": "Raid", "place": "Capilla del Sauce" },
+      { "date": "03 Octubre", "type": "Raid", "place": "Batlle y Ordóñez" }
+    ],
+    "right": [
+      { "date": "11 Julio", "type": "Baile", "place": "Sarandí del Yi" },
+      { "date": "12 Septiembre", "type": "Fiesta Privada", "place": "" }
+    ]
+  },
+  "agenda": [
+    { "day": "20", "month": "Junio", "event": "Baile", "place": "Goñi" },
+    { "day": "11", "month": "Julio", "event": "Baile", "place": "Sarandí del Yi" },
+    { "day": "07", "month": "Septiembre", "event": "Raid", "place": "Capilla del Sauce" },
+    { "day": "12", "month": "Septiembre", "event": "Fiesta Privada", "place": "" },
+    { "day": "03", "month": "Octubre", "event": "Raid", "place": "Batlle y Ordóñez" }
+  ],
+  "gallery": [
+    "assets/IMG_4342.JPG.jpeg",
+    "assets/IMG_7644.JPG.jpeg",
+    "assets/IMG_4233.JPG.jpeg",
+    "assets/IMG_7651.JPG.jpeg",
+    "assets/IMG_7768.JPG.jpeg",
+    "assets/IMG_4253.JPG.jpeg",
+    "assets/IMG_4322.JPG.jpeg",
+    "assets/IMG_4347.JPG.jpeg",
+    "assets/IMG_7690.JPG.jpeg",
+    "assets/IMG_7705.JPG.jpeg"
+  ]
+}
