@@ -3,7 +3,7 @@
     "phone": "098 256 836",
     "phoneLink": "tel:098256836",
     "phoneRaw": "098256836",
-    "youtubeHandle": "LAO11CE",
+    "youtubeHandle": "LA ONCE",
     "youtubeVideoUrl": "https://www.youtube.com/watch?v=OqgEo2I__M0",
     "heroTagline": "¡¡¡Esta Sonando!!!",
     "heroBadge": "En Vivo",
@@ -47,6 +47,11 @@
         "date": "12 Septiembre",
         "type": "Fiesta Privada",
         "place": ""
+      },
+      {
+        "date": "",
+        "type": "",
+        "place": ""
       }
     ]
   },
@@ -80,6 +85,12 @@
       "month": "Octubre",
       "event": "Raid",
       "place": "Batlle y Ordóñez"
+    },
+    {
+      "day": "11",
+      "month": "Diciembre ",
+      "event": "Festival Forestal",
+      "place": "Ciudad del Carmen"
     }
   ],
   "gallery": []
