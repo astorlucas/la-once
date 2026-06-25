@@ -379,6 +379,14 @@
             <input type="text" id="s_youtubeHandle" />
           </div>
           <div class="field">
+            <label for="s_youtubeUrl">Link al perfil de YouTube</label>
+            <input type="text" id="s_youtubeUrl" placeholder="https://www.youtube.com/@..." />
+          </div>
+          <div class="field">
+            <label for="s_instagramUrl">Link al perfil de Instagram</label>
+            <input type="text" id="s_instagramUrl" placeholder="https://instagram.com/..." />
+          </div>
+          <div class="field">
             <label for="s_youtubeVideoUrl">Video de YouTube</label>
             <input type="text" id="s_youtubeVideoUrl" placeholder="https://youtu.be/..." />
             <p class="help">Si lo dejás vacío se usa el canal configurado arriba.</p>
@@ -446,22 +454,6 @@
         <div class="list" id="agendaList"></div>
       </section>
 
-      <!-- GALLERY -->
-      <section class="section">
-        <h2>🖼️ Galería</h2>
-        <div class="upload-bar">
-          <div class="field">
-            <label for="galleryUpload">Subir imagen nueva</label>
-            <input type="file" id="galleryUpload" accept="image/*" />
-          </div>
-          <button class="btn" id="uploadGalleryBtn">Subir</button>
-        </div>
-        <p class="help" style="margin-bottom:14px;">
-          También podés agregar manualmente una ruta existente.
-        </p>
-        <div class="add-bar"><button class="btn" id="addGallery">+ Agregar ruta manual</button></div>
-        <div class="list" id="galleryList"></div>
-      </section>
     </main>
 
     <div class="save-panel">
@@ -484,7 +476,6 @@
        ESTADO
     ══════════════════════════════════════════════ */
     let data = null;
-    let galleryState = [];
     let adminToken = ''; // clave de sesión ingresada al login
 
     /* ══════════════════════════════════════════════
@@ -563,7 +554,7 @@
         showStatus('No se pudo cargar data.json. Se usará una plantilla vacía.', 'err');
         data = {
           site: {
-            phone: '', phoneRaw: '', youtubeHandle: '', youtubeVideoUrl: '', agendaYear: new Date().getFullYear(),
+            phone: '', phoneRaw: '', youtubeHandle: '', youtubeUrl: '', youtubeVideoUrl: '', instagramUrl: '', agendaYear: new Date().getFullYear(),
             heroTagline: '', heroBadge: '', scrollHint: 'Ver agenda',
             agendaEyebrow: 'Próximas fechas', ctaLabel: '', ctaTitle: '', ctaSub: ''
           },
@@ -573,13 +564,10 @@
             'lavender': '#dcc8f5', 'muted': '#9b7ec8'
           },
           heroDates: { left: [], right: [] },
-          agenda: [],
-          gallery: []
+          agenda: []
         };
       }
       ensureIds();
-      // Convertir galería a objetos con ID para el UI
-      galleryState = (data.gallery || []).map(src => ({ _id: generateId(), src: typeof src === 'string' ? src : (src.src || '') }));
     }
 
     function ensureIds() {
@@ -594,6 +582,8 @@
       data.site.phoneRaw = $('s_phoneRaw').value;
       data.site.phoneLink = 'tel:' + $('s_phoneRaw').value;
       data.site.youtubeHandle = $('s_youtubeHandle').value;
+      data.site.youtubeUrl = $('s_youtubeUrl').value;
+      data.site.instagramUrl = $('s_instagramUrl').value;
       data.site.youtubeVideoUrl = $('s_youtubeVideoUrl').value;
       data.site.agendaYear = parseInt($('s_agendaYear').value, 10) || new Date().getFullYear();
       data.site.heroTagline = $('s_heroTagline').value;
@@ -672,29 +662,6 @@
       bindListEvents(wrap, 'agenda');
     }
 
-    function renderGalleryList() {
-      const wrap = $('galleryList');
-      if (!galleryState.length) {
-        wrap.innerHTML = '<div class="list-empty">Sin imágenes.</div>';
-        return;
-      }
-      wrap.innerHTML = galleryState.map((item, idx) => `
-        <div class="show-card" draggable="true" data-id="${item._id}" data-kind="gallery">
-          <div class="show-card__header">
-            <span class="show-card__title">#${idx + 1}</span>
-            <span class="show-card__drag" title="Arrastrar para reordenar">⋮⋮</span>
-          </div>
-          <div class="show-card__fields full">
-            <input type="text" placeholder="assets/imagen.jpg" value="${escapeHtml(item.src)}" data-field="src" />
-          </div>
-          <div class="show-card__actions">
-            <button class="btn btn--danger" data-action="delete" data-id="${item._id}" data-kind="gallery">Eliminar</button>
-          </div>
-        </div>
-      `).join('');
-      bindListEvents(wrap, 'gallery');
-    }
-
     function bindListEvents(wrap, kind) {
       // Drag & drop para reordenar
       let dragged = null;
@@ -728,7 +695,6 @@
           if (kind === 'heroLeft') data.heroDates.left = data.heroDates.left.filter(i => i._id !== id);
           if (kind === 'heroRight') data.heroDates.right = data.heroDates.right.filter(i => i._id !== id);
           if (kind === 'agenda') data.agenda = data.agenda.filter(i => i._id !== id);
-          if (kind === 'gallery') galleryState = galleryState.filter(i => i._id !== id);
           refreshAllLists();
         });
       });
@@ -766,18 +732,12 @@
           place: card.querySelector('[data-field="place"]').value
         });
       });
-      // Gallery
-      galleryState = [];
-      $('galleryList').querySelectorAll('.show-card').forEach(card => {
-        galleryState.push({ _id: card.dataset.id, src: card.querySelector('[data-field="src"]').value });
-      });
     }
 
     function refreshAllLists() {
       renderHeroList('heroLeftList', data.heroDates.left, 'heroLeft');
       renderHeroList('heroRightList', data.heroDates.right, 'heroRight');
       renderAgendaList();
-      renderGalleryList();
     }
 
     /* ══════════════════════════════════════════════
@@ -789,7 +749,6 @@
       stripIds(clone.heroDates.left);
       stripIds(clone.heroDates.right);
       stripIds(clone.agenda);
-      clone.gallery = galleryState.map(item => item.src);
       return clone;
     }
 
@@ -844,6 +803,8 @@
       $('s_phone').value = data.site.phone || '';
       $('s_phoneRaw').value = data.site.phoneRaw || '';
       $('s_youtubeHandle').value = data.site.youtubeHandle || '';
+      $('s_youtubeUrl').value = data.site.youtubeUrl || '';
+      $('s_instagramUrl').value = data.site.instagramUrl || '';
       $('s_youtubeVideoUrl').value = data.site.youtubeVideoUrl || '';
       $('s_agendaYear').value = data.site.agendaYear || new Date().getFullYear();
       $('s_heroTagline').value = data.site.heroTagline || '';
@@ -886,70 +847,6 @@
       readListsFromForm();
       data.agenda.push({ _id: generateId(), day: '', month: '', event: '', place: '' });
       renderAgendaList();
-    });
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64 = reader.result.split(',')[1];
-          resolve(base64);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function sanitizeFileName(name) {
-      return name.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-zA-Z0-9._-]/g, '-')
-        .replace(/-+/g, '-')
-        .toLowerCase();
-    }
-
-    async function uploadGalleryImage() {
-      const input = $('galleryUpload');
-      const file = input.files?.[0];
-      if (!file) return showStatus('Seleccioná una imagen primero.', 'err');
-      if (!adminToken) return showStatus('No hay sesión activa. Volvé a iniciar sesión.', 'err');
-
-      try {
-        const base64 = await fileToBase64(file);
-        const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
-        const baseName = sanitizeFileName(file.name.replace(/\.[^.]+$/, ''));
-        const uniqueName = `${baseName}-${Date.now()}.${ext}`;
-        const path = `assets/${uniqueName}`;
-
-        const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
-          method: 'PUT',
-          headers: { 'Authorization': 'Bearer ' + adminToken, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: `Subida de imagen ${uniqueName} desde backoffice`,
-            content: base64,
-            branch: BRANCH
-          })
-        });
-        if (!putRes.ok) {
-          const err = await putRes.json();
-          throw new Error(err.message || 'Error al subir la imagen.');
-        }
-
-        readListsFromForm();
-        galleryState.push({ _id: generateId(), src: path });
-        renderGalleryList();
-        input.value = '';
-        showStatus(`✅ Imagen subida: ${uniqueName}`, 'ok');
-      } catch (err) {
-        console.error(err);
-        showStatus('Error al subir: ' + err.message, 'err');
-      }
-    }
-
-    $('uploadGalleryBtn').addEventListener('click', uploadGalleryImage);
-
-    $('addGallery').addEventListener('click', () => {
-      readListsFromForm();
-      galleryState.push({ _id: generateId(), src: 'assets/nueva-imagen.jpg' });
-      renderGalleryList();
     });
 
     // Auto-login si la sesión existe hace menos de 8 horas y tenemos clave guardada

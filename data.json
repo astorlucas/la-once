@@ -4,7 +4,9 @@
     "phoneLink": "tel:098256836",
     "phoneRaw": "098256836",
     "youtubeHandle": "LA ONCE",
+    "youtubeUrl": "",
     "youtubeVideoUrl": "https://www.youtube.com/watch?v=OqgEo2I__M0",
+    "instagramUrl": "",
     "heroTagline": "¡¡¡Esta Sonando!!!",
     "heroBadge": "En Vivo",
     "scrollHint": "Ver agenda",
@@ -88,10 +90,9 @@
     },
     {
       "day": "11",
-      "month": "Diciembre ",
+      "month": "Diciembre",
       "event": "Festival Forestal",
       "place": "Ciudad del Carmen"
     }
-  ],
-  "gallery": []
+  ]
 }

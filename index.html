@@ -92,6 +92,30 @@
       transition: color .2s;
     }
 
+    .topbar__right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .topbar__socials {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar__social {
+      width: 42px; height: 42px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      flex-shrink: 0;
+      transition: background .2s, border-color .2s;
+    }
+    .topbar__social svg { width: 18px; height: 18px; fill: var(--gold); transition: fill .2s; }
+    .topbar__social:hover { background: var(--gold); border-color: var(--gold); }
+    .topbar__social:hover svg { fill: var(--bg-deep); }
+
     /* ═══════════════════════════════════════════
        HERO
     ═══════════════════════════════════════════ */
@@ -458,52 +482,6 @@
     }
 
     /* ═══════════════════════════════════════════
-       GALLERY STRIP
-    ═══════════════════════════════════════════ */
-    .gallery-strip {
-      padding: 64px 0 52px;
-      overflow: hidden;
-      background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-deep) 100%);
-    }
-    .gallery-strip__label {
-      text-align: center;
-      font-family: 'Oswald', sans-serif;
-      font-size: .66rem;
-      letter-spacing: .32em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 26px;
-    }
-    .gallery-wrapper { position: relative; }
-    .gallery-wrapper::before,
-    .gallery-wrapper::after {
-      content: '';
-      position: absolute; top: 0; bottom: 0;
-      width: 120px; z-index: 2; pointer-events: none;
-    }
-    .gallery-wrapper::before { left: 0;  background: linear-gradient(to right, var(--bg-deep), transparent); }
-    .gallery-wrapper::after  { right: 0; background: linear-gradient(to left,  var(--bg-deep), transparent); }
-
-    .gallery-track {
-      display: flex;
-      gap: 14px;
-      width: max-content;
-      animation: scrollLeft 42s linear infinite;
-    }
-    .gallery-track:hover { animation-play-state: paused; }
-    .gallery-track img {
-      height: 300px;
-      width: auto;
-      object-fit: cover;
-      border-radius: var(--radius);
-      flex-shrink: 0;
-      filter: brightness(.82) saturate(1.1);
-      border: 1px solid rgba(212,160,23,.12);
-      transition: transform .35s ease, filter .35s ease;
-    }
-    .gallery-track img:hover { transform: scale(1.045); filter: brightness(1) saturate(1.3); }
-
-    /* ═══════════════════════════════════════════
        AGENDA SECTION
     ═══════════════════════════════════════════ */
     .agenda {
@@ -684,10 +662,6 @@
     /* ═══════════════════════════════════════════
        KEYFRAMES
     ═══════════════════════════════════════════ */
-    @keyframes scrollLeft {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
     @keyframes fadeDown {
       from { opacity: 0; transform: translateY(-16px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -747,6 +721,10 @@
       .topbar__logo { height: 52px; }
       .topbar__num { font-size: .95rem; }
       .topbar__label { font-size: .58rem; }
+      .topbar__right { gap: 10px; }
+      .topbar__socials { gap: 8px; }
+      .topbar__social { width: 36px; height: 36px; }
+      .topbar__social svg { width: 16px; height: 16px; }
 
       .date-row {
         grid-template-columns: minmax(80px, 130px) 1fr;
@@ -754,7 +732,6 @@
       }
       .date-row__dot { display: none; }
       .date-row__info { padding-left: 16px; }
-      .gallery-track img { height: 220px; }
       .agenda { padding: 64px 14px 80px; }
     }
   </style>
@@ -773,15 +750,25 @@
   <!-- ═══ TOP BAR ══════════════════════════════════════ -->
   <header class="topbar">
     <img class="topbar__logo" src="assets/Logo%20sin%20fondo.png" alt="La Once" />
-    <a class="topbar__contact" id="topbarPhoneLink" href="tel:098256836">
-      <div class="topbar__icon">
-        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+    <div class="topbar__right">
+      <div class="topbar__socials">
+        <a class="topbar__social" id="instagramLink" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+        </a>
+        <a class="topbar__social" id="youtubeLink" href="#" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+        </a>
       </div>
-      <div>
-        <div class="topbar__label">Contrataciones</div>
-        <div class="topbar__num" id="topbarPhone">098 256 836</div>
-      </div>
-    </a>
+      <a class="topbar__contact" id="topbarPhoneLink" href="tel:098256836">
+        <div class="topbar__icon">
+          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        </div>
+        <div>
+          <div class="topbar__label">Contrataciones</div>
+          <div class="topbar__num" id="topbarPhone">098 256 836</div>
+        </div>
+      </a>
+    </div>
   </header>
 
   <!-- ═══ HERO ══════════════════════════════════════════ -->
@@ -845,14 +832,6 @@
 
   </section>
 
-  <!-- ═══ GALLERY STRIP ════════════════════════════════ -->
-  <section class="gallery-strip">
-    <p class="gallery-strip__label">La banda en acción</p>
-    <div class="gallery-wrapper">
-      <div class="gallery-track" id="galleryTrack"></div>
-    </div>
-  </section>
-
   <!-- ═══ AGENDA ════════════════════════════════════════ -->
   <section class="agenda" id="agenda">
     <p class="eyebrow" id="agendaEyebrow">Próximas fechas</p>
@@ -887,7 +866,9 @@
         "phoneLink": "tel:098256836",
         "phoneRaw": "098256836",
         "youtubeHandle": "LAO11CE",
+        "youtubeUrl": "",
         "youtubeVideoUrl": "",
+        "instagramUrl": "",
         "heroTagline": "¡¡¡Esta Sonando!!!",
         "heroBadge": "En Vivo",
         "scrollHint": "Ver agenda",
@@ -923,13 +904,8 @@
         { "day": "11", "month": "Julio", "event": "Baile", "place": "Sarandí del Yi" },
         { "day": "07", "month": "Septiembre", "event": "Raid", "place": "Capilla del Sauce" },
         { "day": "12", "month": "Septiembre", "event": "Fiesta Privada", "place": "" },
-        { "day": "03", "month": "Octubre", "event": "Raid", "place": "Batlle y Ordóñez" }
-      ],
-      "gallery": [
-        "assets/IMG_4342.JPG.jpeg", "assets/IMG_7644.JPG.jpeg", "assets/IMG_4233.JPG.jpeg",
-        "assets/IMG_7651.JPG.jpeg", "assets/IMG_7768.JPG.jpeg", "assets/IMG_4253.JPG.jpeg",
-        "assets/IMG_4322.JPG.jpeg", "assets/IMG_4347.JPG.jpeg", "assets/IMG_7690.JPG.jpeg",
-        "assets/IMG_7705.JPG.jpeg"
+        { "day": "03", "month": "Octubre", "event": "Raid", "place": "Batlle y Ordóñez" },
+        { "day": "11", "month": "Diciembre", "event": "Festival Forestal", "place": "Ciudad del Carmen" }
       ]
     };
 
@@ -986,6 +962,23 @@
       document.getElementById('ytChannelLink').href = ytUrl;
       document.getElementById('ytFallbackLink').href = ytUrl;
 
+      // Social links
+      const instagramLink = document.getElementById('instagramLink');
+      const youtubeLink = document.getElementById('youtubeLink');
+      if (s.instagramUrl) {
+        instagramLink.href = s.instagramUrl;
+        instagramLink.style.display = '';
+      } else {
+        instagramLink.style.display = 'none';
+      }
+      const youtubeProfileUrl = s.youtubeUrl || (s.youtubeHandle ? `https://www.youtube.com/@${s.youtubeHandle}` : '');
+      if (youtubeProfileUrl) {
+        youtubeLink.href = youtubeProfileUrl;
+        youtubeLink.style.display = '';
+      } else {
+        youtubeLink.style.display = 'none';
+      }
+
       // Hero textos
       document.getElementById('heroTagline').textContent = s.heroTagline;
       document.getElementById('heroBadge').textContent = s.heroBadge;
@@ -1028,10 +1021,6 @@
         </div>
       `).join('');
 
-      // Gallery (duplicada para animación infinita)
-      const track = document.getElementById('galleryTrack');
-      const images = (data.gallery || []).map(src => `<img src="${escapeHtml(src)}" alt="La Once en vivo" />`).join('');
-      track.innerHTML = images + images;
     }
 
     /* ══════════════════════════════════════════════
@@ -1184,15 +1173,6 @@
     }
 
     /* ══════════════════════════════════════════════
-       4. GALLERY — touch pause
-    ══════════════════════════════════════════════ */
-    function initGalleryTouch() {
-      const track = document.getElementById('galleryTrack');
-      track.addEventListener('touchstart', () => track.style.animationPlayState = 'paused', { passive: true });
-      track.addEventListener('touchend',   () => track.style.animationPlayState = 'running', { passive: true });
-    }
-
-    /* ══════════════════════════════════════════════
        INICIALIZACIÓN
     ══════════════════════════════════════════════ */
     (async function boot() {
@@ -1206,7 +1186,6 @@
 
       initYouTube(data.site?.youtubeVideoUrl || '');
       initAgendaObserver();
-      initGalleryTouch();
     })();
   </script>
 </body>
